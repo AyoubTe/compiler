@@ -1,0 +1,237 @@
+#include <iostream>
+#include "lexicale.cpp"
+
+TUnite motCourant;
+
+void declarateur_prime()
+{
+    if (motCourant.UL == CRO)
+    {
+        motCourant = uniteSuivante();
+        if (motCourant.UL == CONST)
+        {
+            motCourant = uniteSuivante();
+            if (motCourant.UL == CRF)
+            {
+                motCourant = uniteSuivante();
+            }
+            else
+            {
+                cout << "Erreur [ attendu" << endl;
+            }
+        }
+        else
+        {
+            cout << "Erreur CONST attendu" << endl;
+        }
+    }
+}
+
+void declarateur(){
+
+}
+
+void liste_declarateurs_prime(){
+
+}
+
+void liste_declarateurs()
+{
+    if (motCourant.UL == IDENT)
+    {
+        declarateur();
+        liste_declarateurs_prime();
+    }
+}
+
+void declaration()
+{
+    if (motCourant.UL == MOTCLE)
+    {
+        if (motCourant.lexeme == "int" || motCourant.lexeme == "char")
+        {
+            motCourant = uniteSuivante();
+            liste_declarateurs();
+            if (motCourant.UL == PV)
+            {
+                // Handle case when PV is encountered
+            }
+            else
+            {
+                cout << "Erreur ; est attendu" << endl;
+            }
+        }
+        else
+        {
+            cout << "Erreur int ou char est attendu" << endl;
+        }
+    }
+    else
+    {
+        cout << "Erreur mot clé est attendu" << endl;
+    }
+}
+
+void liste_declarations()
+{
+    if (motCourant.UL == MOTCLE)
+    {
+        if (motCourant.lexeme == "int" || motCourant.lexeme == "car")
+        {
+            declaration();
+            liste_declarations();
+        }
+    }
+}
+
+void fonction(){
+
+}
+
+
+void liste_fonctions()
+{
+    if (motCourant.UL == MOTCLE)
+    {
+        if (motCourant.lexeme == "int" || motCourant.lexeme == "car" || motCourant.lexeme == "void")
+        {
+            fonction();
+            liste_fonctions();
+        }
+    }
+}
+
+void programme_prime()
+{
+    if (motCourant.UL == CRO)
+    {
+        declarateur_prime();
+        liste_declarateurs_prime();
+        if (motCourant.UL == PV)
+        {
+            motCourant = uniteSuivante();
+            programme();
+        }
+    }
+    else if (motCourant.UL == PO)
+    {
+        motCourant = uniteSuivante();
+        lise_params();
+        if (motCourant.UL == PF)
+        {
+            motCourant = uniteSuivante();
+            if (motCourant.UL == AO)
+            {
+                motCourant = uniteSuivante();
+                liste_declarations();
+                liste_instructions();
+                if (motCourant.UL == AF)
+                {
+                    motCourant = uniteSuivante();
+                    liste_fonctions();
+                }
+                else
+                {
+                    cout << "Erreur } est attendu!" << endl;
+                }
+            }
+            else
+            {
+                cout << "Erreur { est attendu!" << endl;
+            }
+        }
+        else
+        {
+            cout << "Erreur ) est attendu!" << endl;
+        }
+    }
+    else
+    {
+        cout << "Erreur ( est attendu!" << endl;
+    }
+}
+
+void programme()
+{
+    if (motCourant.UL == MOTCLE)
+    {
+        if (motCourant.lexeme == "int")
+        {
+            motCourant = uniteSuivante();
+            if (motCourant.UL == IDENT)
+            {
+                motCourant = uniteSuivante();
+                programme_prime();
+            }
+            else
+            {
+                cout << "Erreur identificateur est attendu!" << endl;
+            }
+        }
+        else if (motCourant.lexeme == "car")
+        {
+            motCourant = uniteSuivante();
+            if (motCourant.UL == IDENT)
+            {
+                motCourant = uniteSuivante();
+                programme_prime();
+            }
+            else
+            {
+                cout << "Erreur identificateur est attendu!" << endl;
+            }
+        }
+        else if (motCourant.lexeme == "void")
+        {
+            motCourant = uniteSuivante();
+            if (motCourant.UL == IDENT)
+            {
+                motCourant = uniteSuivante();
+                if (motCourant.UL == PO)
+                {
+                    liste_params();
+                    motCourant = uniteSuivante();
+                    if (motCourant.UL == PF)
+                    {
+                        motCourant = uniteSuivante();
+                        if (motCourant.UL == ACO)
+                        {
+                            motCourant = uniteSuivante();
+                            liste_declarations();
+                            liste_instructions();
+                            motCourant = uniteSuivante();
+                            if (motCourant.UL == ACF)
+                            {
+                                motCourant = uniteSuivante();
+                                liste_fonctions();
+                            }
+                            else
+                            {
+                                cout << "Erreur } est attendu" << endl;
+                            }
+                        }
+                        else
+                        {
+                            cout << "Erreur { est attendu" << endl;
+                        }
+                    }
+                    else
+                    {
+                        cout << "Erreur ) est attendu" << endl;
+                    }
+                }
+                else
+                {
+                    cout << "Erreur ( est attendu!" << endl;
+                }
+            }
+        }
+    }
+    else if (motCourant.lexeme == "fin")
+    {
+        cout << "la fin du fichier" << endl;
+    }
+    else{
+        cout << "" << endl;
+    }
+}

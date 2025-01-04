@@ -1,0 +1,10 @@
+car c;
+int a;
+int f(car b){
+	return a;
+}
+
+
+void main(){
+	f(c);
+}

@@ -1,0 +1,7 @@
+
+int i, j;
+
+int main(){
+	
+	a = 4
+}
